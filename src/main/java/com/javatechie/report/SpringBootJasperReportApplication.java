@@ -7,6 +7,7 @@ import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,12 +25,14 @@ public class SpringBootJasperReportApplication {
     private ReportService service;
 
     @GetMapping("/getEmployees")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Employee> getEmployees() {
 
         return repository.findAll();
     }
 
     @GetMapping("/report/{format}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String generateReport(@PathVariable String format) throws FileNotFoundException, JRException {
         return service.exportReport(format);
     }
